@@ -8,43 +8,49 @@ import java.sql.Statement;
 
 public class HSQLDB {
     
-    public Connection conn;
     private Statement statement;
-    public static HSQLDB db;
+    
+    private static HSQLDB instance = new HSQLDB();
+    public static final String URL = "jdbc:hsqldb:mem:hr";
+    public static final String USER = "sa";
+    public static final String PASSWORD = "";
+    public static final String DRIVER_CLASS = "org.hsqldb.jdbc.JDBCDriver";
     
     private HSQLDB() {
-        String url = "jdbc:hsqldb:mem:";
-        String dbName = "hr";
-        String driver = "org.hsqldb.jdbc.JDBCDriver";
-        String userName = "sa";
-        String password = "";
         try {
-            Class.forName(driver).newInstance();
-            this.conn = (Connection) DriverManager.getConnection(url + dbName,
-                    userName, password);
-        } catch (Exception sqle) {
-            sqle.printStackTrace();
+            Class.forName(DRIVER_CLASS);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
-    
-    public static synchronized HSQLDB getDbCon() {
-        if (db == null) {
-            db = new HSQLDB();
+
+    public static HSQLDB getInstance() {
+        return instance;
+    }
+
+    private Connection createConnection() {
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+        } catch (SQLException e) {
+            System.out.println("ERROR: Unable to Connect to Database.");
         }
-        return db;
-        
+        return connection;
+    }
+
+    public static Connection getConnection() throws Exception {
+        return instance.createConnection();
     }
     
-    public ResultSet query(String query) throws SQLException {
-        statement = db.conn.createStatement();
-        ResultSet res = statement.executeQuery(query);
-        return res;
+    public ResultSet query(String query) throws Exception {
+        statement = getConnection().createStatement();
+        ResultSet resultSet = statement.executeQuery(query);
+        return resultSet;
     }
     
-    public int insert(String insertQuery) throws SQLException {
-        statement = db.conn.createStatement();
-        int result = statement.executeUpdate(insertQuery);
-        return result;
-        
+    public int insert(String insertQuery) throws Exception {
+        statement = getConnection().createStatement();
+        int count = statement.executeUpdate(insertQuery);
+        return count;
     }
 }
