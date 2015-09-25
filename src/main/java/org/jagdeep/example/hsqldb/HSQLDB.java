@@ -1,4 +1,4 @@
-package org.example.hsqldb;
+package org.jagdeep.example.hsqldb;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

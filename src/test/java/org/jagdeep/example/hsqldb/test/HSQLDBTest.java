@@ -1,8 +1,8 @@
-package org.example.hsqldb.test;
+package org.jagdeep.example.hsqldb.test;
 
 import java.sql.ResultSet;
 
-import org.example.hsqldb.HSQLDB;
+import org.jagdeep.example.hsqldb.HSQLDB;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
